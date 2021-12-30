@@ -1,6 +1,7 @@
 package com.codingforcookies.armorequip;
 
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -25,9 +26,9 @@ import com.codingforcookies.armorequip.ArmorEquipEvent.EquipMethod;
  */
 public class ArmorListener implements Listener{
 
-	private final List<String> blockedMaterials;
+	private final Set<String> blockedMaterials;
 
-	public ArmorListener(List<String> blockedMaterials){
+	public ArmorListener(Set<String> blockedMaterials){
 		this.blockedMaterials = blockedMaterials;
 	}
 	//Event Priority is highest because other plugins might cancel the events before we check.
@@ -115,10 +116,7 @@ public class ArmorListener implements Listener{
 			if(!e.useInteractedBlock().equals(Result.DENY)){
 				if(e.getClickedBlock() != null && e.getAction() == Action.RIGHT_CLICK_BLOCK && !player.isSneaking()){// Having both of these checks is useless, might as well do it though.
 					// Some blocks have actions when you right click them which stops the client from equipping the armor in hand.
-					Material mat = e.getClickedBlock().getType();
-					for(String s : blockedMaterials){
-						if(mat.name().equalsIgnoreCase(s)) return;
-					}
+					if( blockedMaterials.contains(e.getClickedBlock().getType().name())) { return; }
 				}
 			}
 			ArmorType newArmorType = ArmorType.matchType(e.getItem());

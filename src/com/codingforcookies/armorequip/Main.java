@@ -6,6 +6,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @author Arnah
  * @since Jul 30, 2015
@@ -15,7 +18,9 @@ public class Main extends JavaPlugin implements Listener{
 	@Override
 	public void onEnable(){
 		saveDefaultConfig();
-		getServer().getPluginManager().registerEvents(new ArmorListener(getConfig().getStringList("blocked")), this);
+		Set<String> blockedMaterials = new HashSet<>(getConfig().getStringList("blocked"));
+
+		getServer().getPluginManager().registerEvents(new ArmorListener(blockedMaterials), this);
 		try{
 			//Better way to check for this? Only in 1.13.1+?
 			Class.forName("org.bukkit.event.block.BlockDispenseArmorEvent");
